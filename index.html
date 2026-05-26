@@ -35,43 +35,36 @@
         </div>
       </header>
 
-      <section class="briefing" aria-labelledby="briefingTitle">
-        <h2 id="briefingTitle">Досье дня</h2>
-        <p>
-          Уровни открываются по одному. Вводи номер или название объекта:
-          например <strong>173</strong>, <strong>SCP-173</strong> или
-          <strong>Скульптура</strong>. Подходящие SCP появятся сразу во время ввода.
-        </p>
-      </section>
-
       <div class="top-actions" aria-label="Дополнительные разделы">
         <button id="ratingPanelButton" class="secondary-button" type="button">Рейтинг</button>
         <button id="howToPanelButton" class="secondary-button" type="button">Как играть</button>
       </div>
 
-      <section id="topPanel" class="top-panel" hidden>
-        <div class="top-panel-head">
-          <div>
-            <p id="topPanelKicker" class="panel-kicker"></p>
-            <h2 id="topPanelTitle"></h2>
+      <section id="topPanel" class="modal-overlay" hidden>
+        <article class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="topPanelTitle">
+          <button id="closeTopPanelButton" class="modal-close" type="button" aria-label="Закрыть">×</button>
+          <div class="top-panel-head">
+            <div>
+              <p id="topPanelKicker" class="panel-kicker"></p>
+              <h2 id="topPanelTitle"></h2>
+            </div>
           </div>
-          <button id="closeTopPanelButton" class="secondary-button" type="button">Закрыть</button>
-        </div>
 
-        <div id="ratingPanelContent" class="panel-content" hidden>
-          <p id="playerRankStatus" class="leaderboard-status"></p>
-          <ol id="fullLeaderboardList" class="leaderboard-list full-leaderboard-list"></ol>
-        </div>
+          <div id="ratingPanelContent" class="panel-content" hidden>
+            <p id="playerRankStatus" class="leaderboard-status"></p>
+            <ol id="fullLeaderboardList" class="leaderboard-list full-leaderboard-list"></ol>
+          </div>
 
-        <div id="howToPanelContent" class="panel-content how-to-panel" hidden>
-          <ol>
-            <li><strong>Цель:</strong> угадать 5 SCP-объектов дня.</li>
-            <li><strong>Порядок:</strong> уровни открываются по одному: классика, документ, эмодзи, классификация и рисунок.</li>
-            <li><strong>Ответ:</strong> вводи номер или название объекта, например <strong>173</strong>, <strong>SCP-173</strong> или <strong>Скульптура</strong>.</li>
-            <li><strong>Подсказки:</strong> после ошибок открывается больше информации.</li>
-            <li><strong>Рейтинг:</strong> результат отправляется только когда закрыты все 5 уровней.</li>
-          </ol>
-        </div>
+          <div id="howToPanelContent" class="panel-content how-to-panel" hidden>
+            <ol>
+              <li><strong>Цель:</strong> угадать 5 SCP-объектов дня.</li>
+              <li><strong>Порядок:</strong> уровни открываются по одному: классика, документ, эмодзи, классификация и рисунок.</li>
+              <li><strong>Ответ:</strong> вводи номер или название объекта, например <strong>173</strong>, <strong>SCP-173</strong> или <strong>Скульптура</strong>.</li>
+              <li><strong>Подсказки:</strong> после ошибок открывается больше информации.</li>
+              <li><strong>Рейтинг:</strong> результат отправляется только когда закрыты все 5 уровней.</li>
+            </ol>
+          </div>
+        </article>
       </section>
 
       <nav id="progress" class="progress" aria-label="Прогресс уровней"></nav>

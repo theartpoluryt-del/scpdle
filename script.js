@@ -1893,6 +1893,16 @@ closeTopPanelButton?.addEventListener("click", () => {
   closeTopPanel();
 });
 
+topPanel?.addEventListener("click", (event) => {
+  if (event.target === topPanel) closeTopPanel();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && topPanel && !topPanel.hidden) {
+    closeTopPanel();
+  }
+});
+
 function render() {
   const streakUpdated = updateStreakIfNeeded();
   const dayState = state.days[today] ?? {};
@@ -1907,9 +1917,6 @@ function render() {
 
   gameEl.classList.toggle("is-static-render", !allowEntryAnimations);
   gameEl.innerHTML = "";
-  if (completed > 0) {
-    gameEl.appendChild(createSolvedList(dayState));
-  }
 
   const scp = daily[activeIndex];
   const progress = dayState[scp.id] ?? { mistakes: 0, solved: false };
@@ -2049,7 +2056,7 @@ function createCard(scp, index, progress) {
         <button type="button" ${progress.revealed ? "disabled" : ""}>Проверить</button>
         <div class="suggestions" hidden></div>
       </div>
-      <div class="message ${progress.revealed ? "ok" : ""}">${progress.revealed ? `Верно: ${scp.id} - ${scp.title}` : ""}</div>
+      <div class="message ${progress.revealed ? "ok" : ""}">${progress.revealed ? `Верно: ${createSourceLinkHtml(scp)}` : ""}</div>
       ${progress.revealed && !progress.solved ? `<button class="next-level-button" type="button">${getNextUnsolvedIndex(index) === -1 ? "Завершить день" : "Следующий уровень"}</button>` : ""}
     </div>
   `;
@@ -2187,7 +2194,7 @@ function createGuessHistoryHtml(progress) {
         ${guesses.map((id) => {
           const scp = scps.find((item) => item.id === id);
           if (!scp) return "";
-          return `<span class="history-chip">${createIconHtml(scp)}${scp.id}</span>`;
+          return `<a class="history-chip source-chip" href="${escapeHtml(scp.source)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(`${scp.id} - ${scp.title}`)}">${createIconHtml(scp)}<span>${scp.id}</span></a>`;
         }).join("")}
       </div>
     </div>
@@ -2268,10 +2275,12 @@ function createClassicTableHtml(targetScp, guessIds) {
       return `
         <article class="classic-attempt ${isLatest ? "is-new" : "is-settled"}" style="--attempt-delay: ${isLatest ? 0 : attemptIndex * 90}ms">
           <header class="guess-summary">
-            ${createIconHtml(guess)}
+            <a class="source-portrait-link" href="${escapeHtml(guess.source)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(`${guess.id} - ${guess.title}`)}">
+              ${createIconHtml(guess)}
+            </a>
             <div>
               <span>Попытка ${attemptIndex + 1}</span>
-              <strong>${guess.id} - ${guess.title}</strong>
+              ${createSourceLinkHtml(guess, "source-title-link")}
             </div>
           </header>
           <div class="trait-grid">${cells}</div>
@@ -2420,6 +2429,10 @@ function createIconHtml(scp) {
       <img src="${portraitSrc}" alt="" loading="lazy" />
     </span>
   `;
+}
+
+function createSourceLinkHtml(scp, className = "source-inline-link") {
+  return `<a class="${className}" href="${escapeHtml(scp.source)}" target="_blank" rel="noreferrer">${escapeHtml(`${scp.id} - ${scp.title}`)}</a>`;
 }
 
 function checkAnswer(scp, index, value, message) {
@@ -2697,16 +2710,18 @@ function openTopPanel(type) {
   if (!topPanel) return;
   const isRating = type === "rating";
   topPanel.hidden = false;
+  document.body.classList.add("modal-open");
   topPanelKicker.textContent = isRating ? "Онлайн" : "Гайд";
   topPanelTitle.textContent = isRating ? "Общий рейтинг" : "Как играть";
   ratingPanelContent.hidden = !isRating;
   howToPanelContent.hidden = isRating;
   if (isRating) renderFullLeaderboard();
-  topPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+  closeTopPanelButton?.focus();
 }
 
 function closeTopPanel() {
   if (topPanel) topPanel.hidden = true;
+  document.body.classList.remove("modal-open");
 }
 
 function escapeHtml(value) {
