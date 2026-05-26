@@ -1,32 +1,45 @@
 .yesterday-list {
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  align-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .yesterday-item {
+  display: inline-flex;
+  width: auto;
+  max-width: 100%;
   min-width: 0;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  padding: 5px 10px 5px 5px;
   overflow: hidden;
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .yesterday-item .scp-portrait {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  height: auto;
-  aspect-ratio: 1 / 1;
-  justify-self: stretch;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  border-radius: 50%;
 }
 
 .yesterday-item .scp-portrait img {
   width: 100%;
-  max-width: 100%;
-  min-width: 0;
   height: 100%;
   object-fit: cover;
 }
 
-@media (max-width: 620px) {
-  .yesterday-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.yesterday-item span {
+  min-width: 0;
+}
+
+.yesterday-item strong {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.yesterday-item small {
+  display: none;
 }
