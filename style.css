@@ -383,9 +383,9 @@ h3 {
 
 .online-grid {
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(320px, 1.08fr);
+  grid-template-columns: 1fr;
   align-items: start;
-  gap: 14px;
+  gap: 12px;
   margin-bottom: 18px;
 }
 
@@ -407,7 +407,11 @@ h3 {
 }
 
 .archive-panel {
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: center;
   align-content: start;
+  gap: 18px;
+  padding: 14px 16px;
 }
 
 .panel-kicker {
@@ -506,7 +510,7 @@ h3 {
   gap: 6px;
   margin: 0;
   padding: 0;
-  max-height: 420px;
+  max-height: 390px;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding-right: 4px;
@@ -1739,6 +1743,11 @@ input:disabled {
 
   .online-grid {
     grid-template-columns: 1fr;
+  }
+
+  .archive-panel {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .leaderboard-head {
