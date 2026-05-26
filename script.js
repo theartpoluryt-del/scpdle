@@ -2660,7 +2660,8 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function resetToday() {
+async function resetToday() {
+  const removedLeaderboard = await deleteTodayScore();
   delete state.days[today];
   delete state.submittedDays[today];
   leaderboardLoadedFor = null;
@@ -2670,7 +2671,26 @@ function resetToday() {
   }
   saveState();
   render();
-  loadLeaderboard();
+  if (!removedLeaderboard) loadLeaderboard();
+}
+
+async function deleteTodayScore() {
+  if (!state.player?.id) return false;
+  try {
+    const response = await fetch("/.netlify/functions/leaderboard", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date: today, playerId: state.player.id })
+    });
+    if (!response.ok) throw new Error("Leaderboard unavailable");
+    const data = await response.json();
+    renderLeaderboard(data.entries ?? []);
+    leaderboardStatusEl.textContent = "Результат за сегодня удалён из рейтинга.";
+    return true;
+  } catch {
+    leaderboardStatusEl.textContent = "Локальный прогресс сброшен. Рейтинг не удалось обновить.";
+    return false;
+  }
 }
 
 function resetAll() {

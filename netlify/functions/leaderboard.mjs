@@ -42,6 +42,18 @@ export default async (request) => {
       return json({ date: entry.date, entries: ranked });
     }
 
+    if (request.method === "DELETE") {
+      const body = await request.json();
+      const date = normalizeDate(body?.date);
+      const playerId = String(body?.playerId ?? "").slice(0, 80);
+      if (!date || !playerId) return json({ error: "Bad delete" }, 400);
+
+      const entries = await readEntries(store, date);
+      const ranked = rankEntries(entries.filter((item) => item.playerId !== playerId)).slice(0, 100);
+      await store.setJSON(date, ranked);
+      return json({ date, entries: ranked });
+    }
+
     return json({ error: "Method not allowed" }, 405);
   } catch {
     return json({ error: "Leaderboard error" }, 500);
