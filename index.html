@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>SCPdle - ежедневные SCP-загадки</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="archive-fix.css?v=2" />
   </head>
   <body>
     <main class="shell">
@@ -45,22 +44,44 @@
         </p>
       </section>
 
+      <div class="top-actions" aria-label="Дополнительные разделы">
+        <button id="ratingPanelButton" class="secondary-button" type="button">Рейтинг</button>
+        <button id="howToPanelButton" class="secondary-button" type="button">Как играть</button>
+      </div>
+
+      <section id="topPanel" class="top-panel" hidden>
+        <div class="top-panel-head">
+          <div>
+            <p id="topPanelKicker" class="panel-kicker"></p>
+            <h2 id="topPanelTitle"></h2>
+          </div>
+          <button id="closeTopPanelButton" class="secondary-button" type="button">Закрыть</button>
+        </div>
+
+        <div id="ratingPanelContent" class="panel-content" hidden>
+          <p id="playerRankStatus" class="leaderboard-status"></p>
+          <ol id="fullLeaderboardList" class="leaderboard-list full-leaderboard-list"></ol>
+        </div>
+
+        <div id="howToPanelContent" class="panel-content how-to-panel" hidden>
+          <ol>
+            <li><strong>Цель:</strong> угадать 5 SCP-объектов дня.</li>
+            <li><strong>Порядок:</strong> уровни открываются по одному: классика, документ, эмодзи, классификация и рисунок.</li>
+            <li><strong>Ответ:</strong> вводи номер или название объекта, например <strong>173</strong>, <strong>SCP-173</strong> или <strong>Скульптура</strong>.</li>
+            <li><strong>Подсказки:</strong> после ошибок открывается больше информации.</li>
+            <li><strong>Рейтинг:</strong> результат отправляется только когда закрыты все 5 уровней.</li>
+          </ol>
+        </div>
+      </section>
+
       <nav id="progress" class="progress" aria-label="Прогресс уровней"></nav>
 
       <section class="online-grid" aria-label="Онлайн SCPdle">
-        <article class="info-panel archive-panel">
-          <div>
-            <p class="panel-kicker">Архив</p>
-            <h2>Вчера было</h2>
-          </div>
-          <div id="yesterdayList" class="yesterday-list"></div>
-        </article>
-
         <article class="info-panel leaderboard-panel">
           <div class="leaderboard-head">
             <div>
               <p class="panel-kicker">Онлайн</p>
-              <h2>Рейтинг дня</h2>
+              <h2>Топ-5 дня</h2>
             </div>
             <label class="player-name-field">
               <span>Имя</span>

@@ -1799,10 +1799,19 @@ const resetAllButton = document.querySelector("#resetAllButton");
 const prevDayButton = document.querySelector("#prevDayButton");
 const nextDayButton = document.querySelector("#nextDayButton");
 const devAnswersEl = document.querySelector("#devAnswers");
-const yesterdayListEl = document.querySelector("#yesterdayList");
 const leaderboardListEl = document.querySelector("#leaderboardList");
+const fullLeaderboardListEl = document.querySelector("#fullLeaderboardList");
 const leaderboardStatusEl = document.querySelector("#leaderboardStatus");
+const playerRankStatusEl = document.querySelector("#playerRankStatus");
 const playerNameInput = document.querySelector("#playerNameInput");
+const ratingPanelButton = document.querySelector("#ratingPanelButton");
+const howToPanelButton = document.querySelector("#howToPanelButton");
+const closeTopPanelButton = document.querySelector("#closeTopPanelButton");
+const topPanel = document.querySelector("#topPanel");
+const topPanelKicker = document.querySelector("#topPanelKicker");
+const topPanelTitle = document.querySelector("#topPanelTitle");
+const ratingPanelContent = document.querySelector("#ratingPanelContent");
+const howToPanelContent = document.querySelector("#howToPanelContent");
 
 const state = loadState();
 let today;
@@ -1812,6 +1821,7 @@ let allowEntryAnimations = false;
 let leaderboardSubmitInFlight = false;
 let leaderboardLoadedFor = null;
 let leaderboardRequestId = 0;
+let latestLeaderboardEntries = [];
 ensurePlayer();
 updateActiveDay();
 
@@ -1871,6 +1881,18 @@ prevDayButton?.addEventListener("click", () => {
   startPreviousTestDay();
 });
 
+ratingPanelButton?.addEventListener("click", () => {
+  openTopPanel("rating");
+});
+
+howToPanelButton?.addEventListener("click", () => {
+  openTopPanel("how-to");
+});
+
+closeTopPanelButton?.addEventListener("click", () => {
+  closeTopPanel();
+});
+
 function render() {
   const streakUpdated = updateStreakIfNeeded();
   const dayState = state.days[today] ?? {};
@@ -1881,7 +1903,6 @@ function render() {
   streakEl.textContent = state.streak;
   solvedTodayEl.textContent = `${completed}/5`;
   renderProgress(activeIndex, dayState);
-  renderYesterdayList();
   renderDevAnswers();
 
   gameEl.classList.toggle("is-static-render", !allowEntryAnimations);
@@ -1939,21 +1960,6 @@ function renderProgress(activeIndex, dayState) {
     step.addEventListener("click", () => selectLevel(index));
     progressEl.appendChild(step);
   });
-}
-
-function renderYesterdayList() {
-  if (!yesterdayListEl) return;
-  yesterdayListEl.innerHTML = yesterdayDaily
-    .map((scp) => `
-      <a class="yesterday-item" href="${scp.source}" target="_blank" rel="noreferrer">
-        ${createIconHtml(scp)}
-        <span>
-          <strong>${scp.id}</strong>
-          <small>${scp.title}</small>
-        </span>
-      </a>
-    `)
-    .join("");
 }
 
 function renderDevAnswers() {
@@ -2036,6 +2042,7 @@ function createCard(scp, index, progress) {
     </div>
     <div class="card-body">
       ${createChallengeHtml(scp, index, progress)}
+      ${createYesterdayNoteHtml(index)}
       ${createGuessHistoryHtml(progress)}
       <div class="answer-row">
         <input type="text" placeholder="Начни вводить SCP..." autocomplete="off" aria-label="Ответ для уровня ${index + 1}" ${progress.revealed ? "disabled" : ""} />
@@ -2343,6 +2350,18 @@ function redactText(text, mistakes) {
     .join(" ");
 }
 
+function createYesterdayNoteHtml(index) {
+  const scp = yesterdayDaily[index];
+  if (!scp) return "";
+  return `
+    <a class="yesterday-note" href="${scp.source}" target="_blank" rel="noreferrer">
+      <span>Вчерашним объектом был</span>
+      <strong>${scp.id}</strong>
+      <small>${scp.title}</small>
+    </a>
+  `;
+}
+
 function hideHalf(text) {
   const words = text.split(" ");
   return words
@@ -2642,13 +2661,52 @@ async function loadLeaderboard() {
 }
 
 function renderLeaderboard(entries) {
-  leaderboardListEl.innerHTML = entries.slice(0, 15).map((entry, index) => `
-    <li class="${entry.playerId === state.player.id ? "is-player" : ""}">
+  latestLeaderboardEntries = entries;
+  leaderboardListEl.innerHTML = entries.slice(0, 5).map((entry, index) => `
+    <li class="${entry.playerId === state.player.id ? "is-player" : ""}" data-player-id="${escapeHtml(entry.playerId)}">
       <span class="rank">${index + 1}</span>
       <span class="leader-name">${escapeHtml(entry.playerName)}</span>
       <span class="leader-score">${entry.streak} streak / ${entry.totalMistakes} ош.</span>
     </li>
   `).join("");
+  renderFullLeaderboard();
+}
+
+function renderFullLeaderboard() {
+  if (!fullLeaderboardListEl || !playerRankStatusEl) return;
+  const playerIndex = latestLeaderboardEntries.findIndex((entry) => entry.playerId === state.player.id);
+  playerRankStatusEl.textContent = playerIndex === -1
+    ? "Твоего результата пока нет в рейтинге. Закрой все 5 уровней, чтобы попасть в список."
+    : `Ты на ${playerIndex + 1} месте из ${latestLeaderboardEntries.length}.`;
+  fullLeaderboardListEl.innerHTML = latestLeaderboardEntries.map((entry, index) => `
+    <li class="${entry.playerId === state.player.id ? "is-player" : ""}" data-player-id="${escapeHtml(entry.playerId)}">
+      <span class="rank">${index + 1}</span>
+      <span class="leader-name">${escapeHtml(entry.playerName)}</span>
+      <span class="leader-score">${entry.streak} streak / ${entry.totalMistakes} ош.</span>
+    </li>
+  `).join("");
+  const playerRow = fullLeaderboardListEl.querySelector(".is-player");
+  if (playerRow && topPanel && !topPanel.hidden) {
+    window.requestAnimationFrame(() => {
+      playerRow.scrollIntoView({ block: "center" });
+    });
+  }
+}
+
+function openTopPanel(type) {
+  if (!topPanel) return;
+  const isRating = type === "rating";
+  topPanel.hidden = false;
+  topPanelKicker.textContent = isRating ? "Онлайн" : "Гайд";
+  topPanelTitle.textContent = isRating ? "Общий рейтинг" : "Как играть";
+  ratingPanelContent.hidden = !isRating;
+  howToPanelContent.hidden = isRating;
+  if (isRating) renderFullLeaderboard();
+  topPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function closeTopPanel() {
+  if (topPanel) topPanel.hidden = true;
 }
 
 function escapeHtml(value) {
