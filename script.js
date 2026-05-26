@@ -2642,7 +2642,7 @@ async function loadLeaderboard() {
 }
 
 function renderLeaderboard(entries) {
-  leaderboardListEl.innerHTML = entries.slice(0, 10).map((entry, index) => `
+  leaderboardListEl.innerHTML = entries.slice(0, 15).map((entry, index) => `
     <li class="${entry.playerId === state.player.id ? "is-player" : ""}">
       <span class="rank">${index + 1}</span>
       <span class="leader-name">${escapeHtml(entry.playerName)}</span>
