@@ -1796,6 +1796,7 @@ const resetTodayButtons = [
   document.querySelector("#resetTodayButtonDev")
 ].filter(Boolean);
 const resetAllButton = document.querySelector("#resetAllButton");
+const prevDayButton = document.querySelector("#prevDayButton");
 const nextDayButton = document.querySelector("#nextDayButton");
 const devAnswersEl = document.querySelector("#devAnswers");
 const yesterdayListEl = document.querySelector("#yesterdayList");
@@ -1864,6 +1865,10 @@ resetAllButton.addEventListener("click", () => {
 
 nextDayButton?.addEventListener("click", () => {
   startNextTestDay();
+});
+
+prevDayButton?.addEventListener("click", () => {
+  startPreviousTestDay();
 });
 
 function render() {
@@ -1986,7 +1991,8 @@ function selectLevel(index) {
   saveState();
   render();
   window.requestAnimationFrame(() => {
-    gameEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    const card = gameEl.querySelector(".card");
+    (card ?? gameEl).scrollIntoView({ behavior: "smooth", block: "start" });
   });
 }
 
@@ -2083,7 +2089,7 @@ function createChallengeHtml(scp, index, progress) {
     return `
       <div class="redacted-file">
         <span class="stamp">Foundation File</span>
-        <p>${redactText(buildDocumentExcerpt(scp, data), mistakes)}</p>
+        <p>${progress.revealed ? buildDocumentExcerpt(scp, data) : redactText(buildDocumentExcerpt(scp, data), mistakes)}</p>
       </div>
     `;
   }
@@ -2682,6 +2688,15 @@ function resetAll() {
 
 function startNextTestDay() {
   state.devDayOffset = (state.devDayOffset ?? 0) + 1;
+  startTestDay();
+}
+
+function startPreviousTestDay() {
+  state.devDayOffset = (state.devDayOffset ?? 0) - 1;
+  startTestDay();
+}
+
+function startTestDay() {
   updateActiveDay();
   leaderboardLoadedFor = null;
   if (!state.days[today]) state.days[today] = {};
