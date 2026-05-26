@@ -224,6 +224,69 @@ h3 {
   z-index: 1;
 }
 
+.dev-answers {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.dev-answers > strong {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dev-answers > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dev-answer-chip {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  gap: 2px 8px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent),
+    rgba(255, 255, 255, 0.035);
+  color: var(--text);
+  text-align: left;
+}
+
+.dev-answer-chip span {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dev-answer-chip b {
+  font-size: 14px;
+}
+
+.dev-answer-chip small {
+  max-width: 150px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dev-answer-chip.copied {
+  border-color: rgba(88, 189, 120, 0.72);
+  box-shadow: 0 0 0 1px rgba(88, 189, 120, 0.22);
+}
+
 .is-static-render .card,
 .is-static-render .solved-list,
 .is-static-render .attempt-card,

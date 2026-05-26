@@ -1797,6 +1797,7 @@ const resetTodayButtons = [
 ].filter(Boolean);
 const resetAllButton = document.querySelector("#resetAllButton");
 const nextDayButton = document.querySelector("#nextDayButton");
+const devAnswersEl = document.querySelector("#devAnswers");
 const yesterdayListEl = document.querySelector("#yesterdayList");
 const leaderboardListEl = document.querySelector("#leaderboardList");
 const leaderboardStatusEl = document.querySelector("#leaderboardStatus");
@@ -1876,6 +1877,7 @@ function render() {
   solvedTodayEl.textContent = `${completed}/5`;
   renderProgress(activeIndex, dayState);
   renderYesterdayList();
+  renderDevAnswers();
 
   gameEl.classList.toggle("is-static-render", !allowEntryAnimations);
   gameEl.innerHTML = "";
@@ -1945,6 +1947,35 @@ function renderYesterdayList() {
       </a>
     `)
     .join("");
+}
+
+function renderDevAnswers() {
+  if (!devAnswersEl) return;
+  devAnswersEl.innerHTML = `
+    <strong>Ответы сегодня</strong>
+    <div>
+      ${daily.map((scp, index) => `
+        <button class="dev-answer-chip" type="button" data-answer="${escapeHtml(scp.id)}">
+          <span>${escapeHtml(levelTypes[index]?.name ?? `Уровень ${index + 1}`)}</span>
+          <b>${escapeHtml(scp.id)}</b>
+          <small>${escapeHtml(scp.title)}</small>
+        </button>
+      `).join("")}
+    </div>
+  `;
+  devAnswersEl.querySelectorAll(".dev-answer-chip").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const answer = button.dataset.answer ?? "";
+      try {
+        await navigator.clipboard.writeText(answer);
+        button.classList.add("copied");
+        window.setTimeout(() => button.classList.remove("copied"), 650);
+      } catch {
+        button.classList.add("copied");
+        window.setTimeout(() => button.classList.remove("copied"), 650);
+      }
+    });
+  });
 }
 
 function selectLevel(index) {
