@@ -415,36 +415,41 @@ h3 {
 }
 
 .yesterday-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  align-items: flex-start;
 }
 
 .yesterday-item {
-  display: grid;
+  display: inline-flex;
+  width: auto;
+  max-width: 100%;
+  align-items: center;
   gap: 8px;
   min-width: 0;
-  padding: 10px;
+  padding: 5px 10px 5px 5px;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 999px;
   background: rgba(255, 255, 255, 0.035);
   color: var(--text);
+  font-size: 13px;
+  font-weight: 800;
   text-decoration: none;
 }
 
 .yesterday-item .scp-portrait {
-  width: 100%;
-  aspect-ratio: 1;
-  height: auto;
-  min-width: 0;
-  max-width: 100%;
-  justify-self: stretch;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  border-radius: 50%;
 }
 
 .yesterday-item .scp-portrait img {
-  min-width: 0;
-  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .yesterday-item strong,
@@ -456,8 +461,7 @@ h3 {
 }
 
 .yesterday-item small {
-  color: var(--muted);
-  font-size: 12px;
+  display: none;
 }
 
 .leaderboard-panel {
@@ -497,6 +501,10 @@ h3 {
   gap: 6px;
   margin: 0;
   padding: 0;
+  max-height: 420px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 4px;
   list-style: none;
 }
 
@@ -1736,8 +1744,8 @@ input:disabled {
     width: 100%;
   }
 
-  .yesterday-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .leaderboard-list {
+    max-height: 360px;
   }
 
   .trait-grid {
