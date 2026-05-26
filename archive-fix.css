@@ -1,0 +1,32 @@
+.yesterday-list {
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  align-items: start;
+}
+
+.yesterday-item {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.yesterday-item .scp-portrait {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  justify-self: stretch;
+}
+
+.yesterday-item .scp-portrait img {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 620px) {
+  .yesterday-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -353,7 +353,7 @@ h3 {
 
 .yesterday-list {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
   gap: 8px;
 }
 
@@ -362,6 +362,7 @@ h3 {
   gap: 8px;
   min-width: 0;
   padding: 10px;
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.035);
@@ -371,8 +372,16 @@ h3 {
 
 .yesterday-item .scp-portrait {
   width: 100%;
-  height: auto;
   aspect-ratio: 1;
+  height: auto;
+  min-width: 0;
+  max-width: 100%;
+  justify-self: stretch;
+}
+
+.yesterday-item .scp-portrait img {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .yesterday-item strong,
