@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "check": "node --check script.js && node --check netlify/functions/leaderboard.mjs"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^8.2.0"
+  },
+  "devDependencies": {}
+}

@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SCPdle - Paint sketches preview</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0d0f;
+        --panel: #181b1f;
+        --panel-2: #20242a;
+        --line: #343a43;
+        --text: #f7f2ea;
+        --muted: #a7abb0;
+        --accent: #e85353;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 48px 48px,
+          linear-gradient(0deg, rgba(255,255,255,.03) 1px, transparent 1px) 0 0 / 48px 48px,
+          radial-gradient(circle at top left, rgba(232,83,83,.16), transparent 34rem),
+          var(--bg);
+        color: var(--text);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      header {
+        padding: 32px clamp(18px, 4vw, 56px) 18px;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: .16em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(34px, 6vw, 76px);
+        line-height: .95;
+      }
+
+      .lead {
+        max-width: 880px;
+        margin: 16px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.5;
+      }
+
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+        padding: 0 clamp(18px, 4vw, 56px) 24px;
+      }
+
+      .stat {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(24,27,31,.78);
+        padding: 10px 14px;
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .stat strong {
+        color: var(--text);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 18px;
+        padding: 0 clamp(18px, 4vw, 56px) 48px;
+      }
+
+      .card {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: linear-gradient(180deg, rgba(32,36,42,.96), rgba(18,20,24,.96));
+        box-shadow: 0 18px 40px rgba(0,0,0,.22);
+      }
+
+      .card-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        border-bottom: 1px solid var(--line);
+        padding: 14px 16px;
+      }
+
+      .card h2 {
+        margin: 0;
+        font-size: 20px;
+      }
+
+      .card small {
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .pair {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--line);
+      }
+
+      .frame {
+        min-width: 0;
+        background: var(--panel);
+      }
+
+      .label {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 10px 12px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+
+      .image-box {
+        display: grid;
+        place-items: center;
+        aspect-ratio: 1;
+        background:
+          linear-gradient(45deg, rgba(255,255,255,.035) 25%, transparent 25% 75%, rgba(255,255,255,.035) 75%) 0 0 / 24px 24px,
+          #0f1114;
+      }
+
+      .image-box.sketch {
+        background: #fff;
+      }
+
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .sketch img {
+        image-rendering: pixelated;
+      }
+
+      @media (max-width: 620px) {
+        .pair {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p class="eyebrow">SCPdle assets</p>
+      <h1>Paint sketches</h1>
+      <p class="lead">
+        Витрина показывает исходные портреты из игры и актуальные рисунки для уровня
+        "Рисунок". Все картинки справа берутся из <b>assets/drawings</b>.
+      </p>
+    </header>
+
+    <section class="toolbar" aria-label="Статистика">
+      <div class="stat"><strong id="count">0</strong> рисунков</div>
+      <div class="stat">Источник: <strong>assets/portraits</strong></div>
+      <div class="stat">Рисунки: <strong>assets/drawings</strong></div>
+    </section>
+
+    <main class="grid" id="grid"></main>
+
+    <script>
+      const scps = [
+        ["SCP-008", "Зомби-чумы"],
+        ["SCP-012", "Плохая композиция"],
+        ["SCP-018", "Супермяч"],
+        ["SCP-023", "Черный пес-призрак"],
+        ["SCP-035", "Маска одержимости"],
+        ["SCP-049", "Чумной Доктор"],
+        ["SCP-055", "Антимеметический объект"],
+        ["SCP-076", "Авель"],
+        ["SCP-079", "Старый ИИ"],
+        ["SCP-087", "Лестница"],
+        ["SCP-093", "Красный морской объект"],
+        ["SCP-096", "Скромник"],
+        ["SCP-105", "Айрис"],
+        ["SCP-106", "Старик"],
+        ["SCP-127", "Живое оружие"],
+        ["SCP-131", "Глазные Капли"],
+        ["SCP-173", "Скульптура"],
+        ["SCP-207", "Кола"],
+        ["SCP-244", "Ледяной туман"],
+        ["SCP-268", "Кепка невидимости"],
+        ["SCP-294", "Кофейный Автомат"],
+        ["SCP-303", "Дверной человек"],
+        ["SCP-500", "Панацея"],
+        ["SCP-682", "Трудноуничтожимая рептилия"],
+        ["SCP-914", "Часовой Механизм"],
+        ["SCP-939", "Со множеством голосов"],
+        ["SCP-999", "Щекоточный Монстр"],
+        ["SCP-1048", "Медведь-строитель"],
+        ["SCP-1344", "Глаза истины"],
+        ["SCP-1471", "MalO"],
+        ["SCP-1509", "Кожа дракона"],
+        ["SCP-1576", "Предсмертные записи"],
+        ["SCP-1762", "Здесь были драконы"],
+        ["SCP-1853", "Производительность"],
+        ["SCP-1981", "Рональд Рейган говорит"],
+        ["SCP-2000", "Deus Ex Machina"],
+        ["SCP-2176", "Призрачный свет"],
+        ["SCP-2295", "Медвежонок-заплатка"],
+        ["SCP-2316", "Тела в воде"],
+        ["SCP-2521", "●●|●●●●●|●●|●"],
+        ["SCP-2662", "Ктулху-подросток"],
+        ["SCP-3008", "Бесконечный IKEA"],
+        ["SCP-3199", "Люди не были людьми"]
+      ];
+
+      const grid = document.querySelector("#grid");
+      document.querySelector("#count").textContent = scps.length;
+
+      grid.innerHTML = scps.map(([id, title]) => {
+        const fileName = id.toLowerCase();
+        return `
+          <article class="card">
+            <div class="card-head">
+              <h2>${id}</h2>
+              <small>${title}</small>
+            </div>
+            <div class="pair">
+              <section class="frame">
+                <div class="label"><span>Исходник</span><span>portrait</span></div>
+                <div class="image-box">
+                  <img src="assets/portraits/${fileName}.png" alt="Исходное изображение ${id}" loading="lazy" />
+                </div>
+              </section>
+              <section class="frame">
+                <div class="label"><span>Рисунок</span><span>paint</span></div>
+                <div class="image-box sketch">
+                  <img src="assets/drawings/${fileName}.png" alt="Paint-рисунок ${id}" loading="lazy" />
+                </div>
+              </section>
+            </div>
+          </article>
+        `;
+      }).join("");
+    </script>
+  </body>
+</html>

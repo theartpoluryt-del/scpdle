@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SCPdle - ежедневные SCP-загадки</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <a class="brand-link" href="index.html" aria-label="SCPdle - главная">
+          <span class="brand-stack">
+            <span class="brand-kicker">
+              <span class="scp-logo" aria-hidden="true">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/e/ec/SCP_Foundation_%28emblem%29.svg"
+                  alt=""
+                />
+              </span>
+              <span class="eyebrow">Foundation Daily Clearance</span>
+            </span>
+            <h1>SCPdle</h1>
+          </span>
+        </a>
+        <div class="stats" aria-label="Статистика">
+          <div>
+            <span id="streak">0</span>
+            <small>streak</small>
+          </div>
+          <div>
+            <span id="solvedToday">0/5</span>
+            <small>сегодня</small>
+          </div>
+        </div>
+      </header>
+
+      <section class="briefing" aria-labelledby="briefingTitle">
+        <h2 id="briefingTitle">Досье дня</h2>
+        <p>
+          Уровни открываются по одному. Вводи номер или название объекта:
+          например <strong>173</strong>, <strong>SCP-173</strong> или
+          <strong>Скульптура</strong>. Подходящие SCP появятся сразу во время ввода.
+        </p>
+      </section>
+
+      <nav id="progress" class="progress" aria-label="Прогресс уровней"></nav>
+
+      <section class="online-grid" aria-label="Онлайн SCPdle">
+        <article class="info-panel">
+          <div>
+            <p class="panel-kicker">Архив</p>
+            <h2>Вчера было</h2>
+          </div>
+          <div id="yesterdayList" class="yesterday-list"></div>
+        </article>
+
+        <article class="info-panel leaderboard-panel">
+          <div class="leaderboard-head">
+            <div>
+              <p class="panel-kicker">Онлайн</p>
+              <h2>Рейтинг дня</h2>
+            </div>
+            <label class="player-name-field">
+              <span>Имя</span>
+              <input id="playerNameInput" type="text" maxlength="18" autocomplete="nickname" />
+            </label>
+          </div>
+          <ol id="leaderboardList" class="leaderboard-list"></ol>
+          <p id="leaderboardStatus" class="leaderboard-status"></p>
+        </article>
+      </section>
+
+      <section id="game" class="game" aria-live="polite"></section>
+
+      <section class="result-panel" id="resultPanel" hidden>
+        <h2>Смена закрыта</h2>
+        <p id="resultText"></p>
+        <div class="button-row">
+          <button id="shareButton" type="button">Скопировать результат</button>
+          <button id="resetTodayButton" class="secondary-button" type="button">Заново сегодня</button>
+        </div>
+      </section>
+
+      <section class="dev-panel" aria-labelledby="devTitle">
+        <h2 id="devTitle">Тестирование</h2>
+        <p>Если день уже пройден, можно сбросить прогресс и проверить игру заново.</p>
+        <div class="button-row">
+          <button id="nextDayButton" class="secondary-button" type="button">Начать следующий день</button>
+          <button id="resetTodayButtonDev" class="secondary-button" type="button">Сбросить сегодняшний день</button>
+          <button id="resetAllButton" class="secondary-button danger-button" type="button">Сбросить всё</button>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>
+          Неофициальный фан-проект по мотивам SCP Foundation. Материалы SCP Wiki
+          используются по лицензии
+          <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noreferrer">CC BY-SA 3.0</a>.
+        </p>
+        <p>
+          Источники сегодняшних объектов открываются после правильного ответа.
+          Источники изображений указаны на странице <a href="credits.html">Credits</a>.
+        </p>
+      </footer>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
