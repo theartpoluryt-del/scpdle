@@ -1985,6 +1985,9 @@ function selectLevel(index) {
   state.days[today].__selectedIndex = Math.max(0, Math.min(daily.length - 1, index));
   saveState();
   render();
+  window.requestAnimationFrame(() => {
+    gameEl.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 }
 
 function createSolvedList(dayState) {
