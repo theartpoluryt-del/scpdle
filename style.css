@@ -543,6 +543,11 @@ h3 {
   gap: 14px;
   position: relative;
   z-index: 5;
+  margin-bottom: 18px;
+}
+
+.game + .result-panel {
+  margin-top: 0;
 }
 
 .card {
@@ -1483,6 +1488,7 @@ input:disabled {
 .solved-list {
   display: grid;
   gap: 8px;
+  margin-bottom: 4px;
   padding: 14px;
   animation: rise-in 360ms ease both;
 }

@@ -1885,13 +1885,15 @@ function render() {
     gameEl.appendChild(createSolvedList(dayState));
   }
 
+  const scp = daily[activeIndex];
+  const progress = dayState[scp.id] ?? { mistakes: 0, solved: false };
+
   if (completed === daily.length) {
+    gameEl.appendChild(createCard(scp, activeIndex, progress));
     resultPanel.hidden = false;
     resultText.textContent = `Отлично: все 5 досье закрыты. Текущий streak: ${state.streak}.`;
     submitTodayScore();
   } else {
-    const scp = daily[activeIndex];
-    const progress = dayState[scp.id] ?? { mistakes: 0, solved: false };
     gameEl.appendChild(createCard(scp, activeIndex, progress));
     resultPanel.hidden = true;
   }
